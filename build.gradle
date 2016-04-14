@@ -12,46 +12,58 @@ apply plugin: 'java'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use 'jcenter' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+  // Use 'jcenter' for resolving your dependencies.
+  // You can declare any Maven/Ivy/file repository here.
+  jcenter()
 }
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
-    // The production code uses the SLF4J logging API at compile time
-    compile 'org.slf4j:slf4j-api:1.7.18'
+  // The production code uses the SLF4J logging API at compile time
+  compile 'org.slf4j:slf4j-api:1.7.18'
 
-    // Declare the dependency for your favourite test framework you want to use in your tests.
-    // TestNG is also supported by the Gradle Test task. Just change the
-    // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
-    // 'test.useTestNG()' to your build script.
-    testCompile 'junit:junit:4.12'
+  // Declare the dependency for your favourite test framework you want to use in your tests.
+  // TestNG is also supported by the Gradle Test task. Just change the
+  // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
+  // 'test.useTestNG()' to your build script.
+  testCompile 'junit:junit:4.12'
+  //***********************************************************************
+  /*
+  testCompile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
+  testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
+  compile ('org.mockito:mockito-core:1.10.19'){
+    exclude group: 'org.hamcrest', module: 'hamcrest-core'
+  }
+  compile ('junit:junit:4.12'){
+    exclude group: 'org.hamcrest', module: 'hamcrest-core'
+  }
+  */
 }
 
 tasks.withType(Test) {
-    testLogging {
-        // set options for log level LIFECYCLE
-        events "passed", "skipped", "failed", "standardOut"
-        showExceptions true
-        exceptionFormat "full"
-        showCauses true
-        showStackTraces true
+  testLogging {
+    // set options for log level LIFECYCLE
+    events "passed", "skipped", "failed", "standardOut"
+    showExceptions true
+    exceptionFormat "full"
+    showCauses true
+    showStackTraces true
 
-        // set options for log level DEBUG and INFO
-        debug {
-            events "started", "passed", "skipped", "failed", "standardOut", "standardError"
-        }
-        info.events = debug.events
-        info.exceptionFormat = debug.exceptionFormat
-
-        afterSuite { desc, result ->
-            if (!desc.parent) { // will match the outermost suite
-                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-            }
-        }
+    // set options for log level DEBUG and INFO
+    debug {
+      events "started", "passed", "skipped", "failed", "standardOut", "standardError"
     }
+    info.events = debug.events
+    info.exceptionFormat = debug.exceptionFormat
+
+    afterSuite { desc, result ->
+      if (!desc.parent) { // will match the outermost suite
+        def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+        def startItem = '|  ', endItem = '  |'
+        def repeatLength = startItem.length() + output.length() + endItem.length()
+        println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+      }
+    }
+  }
 }
